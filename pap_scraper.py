@@ -14,8 +14,8 @@ import logging
 from datetime import datetime
 from bs4 import BeautifulSoup
 
-TELEGRAM_BOT_TOKEN = "VOTRE_BOT_TOKEN"
-TELEGRAM_CHAT_ID   = "VOTRE_CHAT_ID"
+TELEGRAM_BOT_TOKEN = "8619174227:AAGfg_JRsA6D9yvDT9On2lrapjrSiaLXmRU"
+TELEGRAM_CHAT_ID   = "7685475700"
 
 CHECK_INTERVAL = 300
 SEEN_FILE = "annonces_vues.json"
