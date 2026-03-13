@@ -15,19 +15,19 @@ SEEN_FILE = "annonces_vues.json"
 PAP_BASE_URL = "https://www.pap.fr/annonce/vente-parking-garage-box-france-g439"
 REGLE_1_MOT = "box"
 REGLE_1_PRIX_MAX = 15000
-REGLE_2_MOTS = ["boxable","boxables","autorisation","accord","possibilite","possibilité","lot","boxer"]
+REGLE_2_MOTS = ["boxable","boxables","autorisation","accord","possibilite","possibilite","lot","boxer"]
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(message)s")
-log = logging.getLogger(__name__)
+log = logging.getLogger("pap_scraper")
 
-HEADERS = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/124.0.0.0 Safari/537.36", "Accept-Language": "fr-FR,fr;q=0.9"}
+HEADERS = {"User-Agent": "Mozilla/5.0 Chrome/124.0.0.0 Safari/537.36", "Accept-Language": "fr-FR,fr;q=0.9"}
 
 def envoyer_telegram(message):
-    url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
+    url = "https://api.telegram.org/bot" + TELEGRAM_BOT_TOKEN + "/sendMessage"
     try:
         requests.post(url, json={"chat_id": TELEGRAM_CHAT_ID, "text": message}, timeout=10)
     except Exception as e:
-        log.error(f"Telegram error: {e}")
+        log.error("Telegram error: " + str(e))
 
 def extraire_prix(prix_str):
     if not prix_str:
@@ -46,10 +46,10 @@ def filtrer(annonce):
         if prix is None:
             raisons.append("box present (prix non detecte)")
         elif prix < REGLE_1_PRIX_MAX:
-            raisons.append(f"box + prix {int(prix)} EUR < {REGLE_1_PRIX_MAX} EUR")
+            raisons.append("box + prix " + str(int(prix)) + " EUR < 15000 EUR")
     for mot in REGLE_2_MOTS:
         if mot in texte:
-            raisons.append(f"mot cle: {mot}")
+            raisons.append("mot cle: " + mot)
             break
     return len(raisons) > 0, raisons
 
@@ -58,10 +58,12 @@ def scraper():
         r = requests.get(PAP_BASE_URL, headers=HEADERS, timeout=20)
         r.raise_for_status()
     except Exception as e:
-        log.error(f"Erreur scraping: {e}")
+        log.error("Erreur scraping: " + str(e))
         return []
     soup = BeautifulSoup(r.text, "html.parser")
-    cartes = soup.select("a.search-list-item-link, div.search-list-item") or soup.select("[class*='search-list-item']")
+    cartes = soup.select("a.search-list-item-link, div.search-list-item")
+    if not cartes:
+        cartes = soup.select("[class*='search-list-item']")
     annonces = []
     for carte in cartes:
         try:
@@ -69,7 +71,7 @@ def scraper():
             lien = carte if carte.name == "a" else carte.find("a")
             if lien and lien.get("href"):
                 href = lien["href"]
-                a["lien"] = href if href.startswith("http") else f"https://www.pap.fr{href}"
+                a["lien"] = href if href.startswith("http") else "https://www.pap.fr" + href
             t = carte.select_one("h2,h3,[class*='title'],[class*='titre']")
             if t:
                 a["titre"] = t.get_text(strip=True)
@@ -86,7 +88,7 @@ def scraper():
                 annonces.append(a)
         except:
             continue
-    log.info(f"{len(annonces)} annonces trouvees")
+    log.info(str(len(annonces)) + " annonces trouvees")
     return annonces
 
 def generer_id(a):
@@ -124,17 +126,16 @@ def main():
                         if ok:
                             nouvelles.append((a, raisons))
             if premiere:
-                log.info(f"Premiere execution: {len(annonces)} annonces indexees")
+                log.info("Premiere execution: " + str(len(annonces)) + " annonces indexees")
                 premiere = False
             for a, raisons in nouvelles:
-                msg = f"NOUVELLE ANNONCE PAP\n{a.get('titre','')}\n{a.get('lieu','')}\n{a.get('prix','')}\n{' | '.join(raisons)}\n{a.get('lien','')}"
+                msg = "NOUVELLE ANNONCE PAP\n" + a.get("titre","") + "\n" + a.get("lieu","") + "\n" + a.get("prix","") + "\n" + " | ".join(raisons) + "\n" + a.get("lien","")
                 envoyer_telegram(msg)
                 time.sleep(1)
             sauvegarder(vues)
-            log.info(f"{len(nouvelles)} nouvelle(s) annonce(s) matching")
+            log.info(str(len(nouvelles)) + " nouvelle(s) annonce(s) matching")
         except Exception as e:
-            log.error(f"Erreur: {e}")
+            log.error("Erreur: " + str(e))
         time.sleep(CHECK_INTERVAL)
 
-if _name_ == "_main_":
-    main()
+main()
