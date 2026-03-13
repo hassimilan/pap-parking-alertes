@@ -15,7 +15,7 @@ SEEN_FILE = "annonces_vues.json"
 PAP_BASE_URL = "https://www.pap.fr/annonce/vente-parking-garage-box-france-g439"
 REGLE_1_MOT = "box"
 REGLE_1_PRIX_MAX = 15000
-REGLE_2_MOTS = ["boxable","boxables","autorisation","accord","possibilite","possibilite","lot","boxer","urgent"]
+REGLE_2_MOTS = ["boxable","boxables","autorisation","accord","possibilité","possibilite","lot","boxer","urgent"]
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(message)s")
 log = logging.getLogger("pap_scraper")
