@@ -18,7 +18,7 @@ REGLE_1_PRIX_MAX = 15000
 REGLE_2_MOTS = ["boxable","boxables","autorisation","accord","possibilite","possibilité","lot","boxer"]
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(message)s")
-log = logging.getLogger(_name_)
+log = logging.getLogger(__name__)
 
 HEADERS = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/124.0.0.0 Safari/537.36", "Accept-Language": "fr-FR,fr;q=0.9"}
 
