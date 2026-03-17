@@ -46,7 +46,7 @@ URLS = {
     "75018":"https://www.pap.fr/annonce/vente-parking-garage-box-paris-18e-g439g213",
     "75019":"https://www.pap.fr/annonce/vente-parking-garage-box-paris-19e-g439g214",
     "75020":"https://www.pap.fr/annonce/vente-parking-garage-box-paris-20e-g439g215",
-    "paris-surfaces":"https://www.pap.fr/annonce/vente-surfaces-diverses-paris-g439g75"
+"paris-surfaces":"https://www.pap.fr/annonce/vente-surface-a-amenager-ile-de-france-g471"
 }
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(message)s")
@@ -90,8 +90,10 @@ def filtrer(annonce, zone):
     raisons = []
 
     if zone == "paris-surfaces":
-        raisons.append("Surfaces diverses Paris")
-        return True, raisons
+    if prix is not None and prix > 60000:
+        return False, []
+    raisons.append("Surface a amenager IDF - " + str(int(prix)) + " EUR" if prix else "Surface a amenager IDF")
+    return True, raisons
 
     if zone in ARRONDISSEMENTS:
         arr_reel = detecter_arrondissement_depuis_lien(lien) or zone
