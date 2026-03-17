@@ -90,7 +90,13 @@ def filtrer(annonce, zone):
     raisons = []
 
     if zone == "paris-surfaces":
-    if prix is not None and prix > 60000:
+        if prix is not None and prix > 60000:
+            return False, []
+        if prix:
+            raisons.append("Surface a amenager IDF - " + str(int(prix)) + " EUR")
+        else:
+            raisons.append("Surface a amenager IDF")
+        return True, raisons
         return False, []
     raisons.append("Surface a amenager IDF - " + str(int(prix)) + " EUR" if prix else "Surface a amenager IDF")
     return True, raisons
