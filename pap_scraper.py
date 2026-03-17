@@ -119,7 +119,11 @@ def filtrer(a,zone):
     return len(raisons)>0,raisons
 
 def gen_id(a,zone):
-    return hashlib.md5((zone+(a.get("lien") or a.get("titre","")+a.get("prix",""))).encode()).hexdigest()
+    lien=a.get("lien","")
+    m=re.search(r'r(\d+)$',lien)
+    if m:
+        return m.group(1)
+    return hashlib.md5((zone+(lien or a.get("titre","")+a.get("prix",""))).encode()).hexdigest()
 
 def charger():
     if not os.path.exists(SEEN):
