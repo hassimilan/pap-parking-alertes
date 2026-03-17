@@ -12,7 +12,7 @@ TELEGRAM_CHAT_ID = "7685475700"
 CHECK_INTERVAL = 300
 SEEN_FILE = "annonces_vues.json"
 
-REGLE_2_MOTS = ["boxable","boxables","autorisation","accord","possibilite","possibilite","lot","boxer","urgent","fermer"]
+REGLE_2_MOTS = ["boxable","boxage","boxables","autorisation","accord","possibilite","possibilite","lot","boxer","urgent","fermer"]
 
 ARRONDISSEMENTS = {
     "75001": (15000, 30000),
@@ -39,6 +39,7 @@ ARRONDISSEMENTS = {
 
 URLS = {
     "france": "https://www.pap.fr/annonce/vente-parking-garage-box-france-g439",
+    "paris-surfaces-diverses": "https://www.pap.fr/annonce/vente-surfaces-diverses-paris-g439g75",
     "75001": "https://www.pap.fr/annonce/vente-parking-garage-box-paris-1er-g439g196",
     "75002": "https://www.pap.fr/annonce/vente-parking-garage-box-paris-2e-g439g197",
     "75003": "https://www.pap.fr/annonce/vente-parking-garage-box-paris-3e-g439g198",
@@ -88,6 +89,9 @@ def filtrer(annonce, zone):
 
     prix = extraire_prix(annonce.get("prix",""))
 
+if zone == "paris-surfaces-diverses":
+        raisons.append("Surfaces diverses Paris - a verifier")
+    
     if zone in ARRONDISSEMENTS:
         prix_min, prix_max = ARRONDISSEMENTS[zone]
         if prix is not None and prix_min <= prix <= prix_max:
