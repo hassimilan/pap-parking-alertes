@@ -50,6 +50,8 @@ def filtrer(annonce, zone):
         prix_min, prix_max = ARRONDISSEMENTS[zone]
         if prix is not None and prix_min <= prix <= prix_max:
             raisons.append("Paris " + zone + " - prix " + str(int(prix)) + " EUR dans fourchette " + str(prix_min) + "-" + str(prix_max) + " EUR")
+        else:
+            return False, []
     elif zone == "france":
         if "box" in texte:
             if prix is None:
