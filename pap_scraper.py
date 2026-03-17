@@ -12,14 +12,45 @@ TELEGRAM_CHAT_ID = "7685475700"
 CHECK_INTERVAL = 300
 SEEN_FILE = "annonces_vues.json"
 
-REGLE_2_MOTS = ["boxable","boxables","autorisation","accord","possibilite","possibilite","lot","boxer","urgent","fermer"]
+REGLE_2_MOTS = ["boxable","boxables","autorisation","accord","possibilite","possibilité","lot","boxer","urgent","fermer"]
 
-ARRONDISSEMENTS = {"75001":(15000,30000),"75002":(15000,30000),"75003":(10000,30000),"75004":(15000,30000),"75005":(10000,25000),"75006":(15000,30000),"75007":(15000,30000),"75008":(15000,30000),"75009":(10000,20000),"75010":(4000,11000),"75011":(5000,13000),"75012":(4000,13000),"75013":(4000,8000),"75014":(4000,11000),"75015":(3000,12000),"75016":(5000,25000),"75017":(5000,25000),"75018":(2000,10000),"75019":(2000,10000),"75020":(0,10000)}
+ARRONDISSEMENTS = {
+    "75001":(15000,30000),"75002":(15000,30000),"75003":(10000,30000),
+    "75004":(15000,30000),"75005":(10000,25000),"75006":(15000,30000),
+    "75007":(15000,30000),"75008":(15000,30000),"75009":(10000,20000),
+    "75010":(4000,11000),"75011":(5000,13000),"75012":(4000,13000),
+    "75013":(4000,8000),"75014":(4000,11000),"75015":(3000,12000),
+    "75016":(5000,25000),"75017":(5000,25000),"75018":(2000,10000),
+    "75019":(2000,10000),"75020":(0,10000)
+}
 
-URLS = {"france":"https://www.pap.fr/annonce/vente-parking-garage-box-france-g439","75001":"https://www.pap.fr/annonce/vente-parking-garage-box-paris-1er-g439g196","75002":"https://www.pap.fr/annonce/vente-parking-garage-box-paris-2e-g439g197","75003":"https://www.pap.fr/annonce/vente-parking-garage-box-paris-3e-g439g198","75004":"https://www.pap.fr/annonce/vente-parking-garage-box-paris-4e-g439g199","75005":"https://www.pap.fr/annonce/vente-parking-garage-box-paris-5e-g439g200","75006":"https://www.pap.fr/annonce/vente-parking-garage-box-paris-6e-g439g201","75007":"https://www.pap.fr/annonce/vente-parking-garage-box-paris-7e-g439g202","75008":"https://www.pap.fr/annonce/vente-parking-garage-box-paris-8e-g439g203","75009":"https://www.pap.fr/annonce/vente-parking-garage-box-paris-9e-g439g204","75010":"https://www.pap.fr/annonce/vente-parking-garage-box-paris-10e-g439g205","75011":"https://www.pap.fr/annonce/vente-parking-garage-box-paris-11e-g439g206","75012":"https://www.pap.fr/annonce/vente-parking-garage-box-paris-12e-g439g207","75013":"https://www.pap.fr/annonce/vente-parking-garage-box-paris-13e-g439g208","75014":"https://www.pap.fr/annonce/vente-parking-garage-box-paris-14e-g439g209","75015":"https://www.pap.fr/annonce/vente-parking-garage-box-paris-15e-g439g210","75016":"https://www.pap.fr/annonce/vente-parking-garage-box-paris-16e-g439g211","75017":"https://www.pap.fr/annonce/vente-parking-garage-box-paris-17e-g439g212","75018":"https://www.pap.fr/annonce/vente-parking-garage-box-paris-18e-g439g213","75019":"https://www.pap.fr/annonce/vente-parking-garage-box-paris-19e-g439g214","75020":"https://www.pap.fr/annonce/vente-parking-garage-box-paris-20e-g439g215","paris-surfaces-diverses":"https://www.pap.fr/annonce/vente-surfaces-diverses-paris-g439g75"}
+URLS = {
+    "france":"https://www.pap.fr/annonce/vente-parking-garage-box-france-g439",
+    "75001":"https://www.pap.fr/annonce/vente-parking-garage-box-paris-1er-g439g196",
+    "75002":"https://www.pap.fr/annonce/vente-parking-garage-box-paris-2e-g439g197",
+    "75003":"https://www.pap.fr/annonce/vente-parking-garage-box-paris-3e-g439g198",
+    "75004":"https://www.pap.fr/annonce/vente-parking-garage-box-paris-4e-g439g199",
+    "75005":"https://www.pap.fr/annonce/vente-parking-garage-box-paris-5e-g439g200",
+    "75006":"https://www.pap.fr/annonce/vente-parking-garage-box-paris-6e-g439g201",
+    "75007":"https://www.pap.fr/annonce/vente-parking-garage-box-paris-7e-g439g202",
+    "75008":"https://www.pap.fr/annonce/vente-parking-garage-box-paris-8e-g439g203",
+    "75009":"https://www.pap.fr/annonce/vente-parking-garage-box-paris-9e-g439g204",
+    "75010":"https://www.pap.fr/annonce/vente-parking-garage-box-paris-10e-g439g205",
+    "75011":"https://www.pap.fr/annonce/vente-parking-garage-box-paris-11e-g439g206",
+    "75012":"https://www.pap.fr/annonce/vente-parking-garage-box-paris-12e-g439g207",
+    "75013":"https://www.pap.fr/annonce/vente-parking-garage-box-paris-13e-g439g208",
+    "75014":"https://www.pap.fr/annonce/vente-parking-garage-box-paris-14e-g439g209",
+    "75015":"https://www.pap.fr/annonce/vente-parking-garage-box-paris-15e-g439g210",
+    "75016":"https://www.pap.fr/annonce/vente-parking-garage-box-paris-16e-g439g211",
+    "75017":"https://www.pap.fr/annonce/vente-parking-garage-box-paris-17e-g439g212",
+    "75018":"https://www.pap.fr/annonce/vente-parking-garage-box-paris-18e-g439g213",
+    "75019":"https://www.pap.fr/annonce/vente-parking-garage-box-paris-19e-g439g214",
+    "75020":"https://www.pap.fr/annonce/vente-parking-garage-box-paris-20e-g439g215",
+    "paris-surfaces":"https://www.pap.fr/annonce/vente-surfaces-diverses-paris-g439g75"
+}
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(message)s")
-log = logging.getLogger("pap_scraper")
+log = logging.getLogger("pap")
 
 HEADERS = {"User-Agent":"Mozilla/5.0 Chrome/124.0.0.0 Safari/537.36","Accept-Language":"fr-FR,fr;q=0.9"}
 
@@ -28,40 +59,66 @@ def envoyer_telegram(message):
     try:
         requests.post(url, json={"chat_id":TELEGRAM_CHAT_ID,"text":message}, timeout=10)
     except Exception as e:
-        log.error("Telegram error: " + str(e))
+        log.error("Telegram: " + str(e))
 
-def extraire_prix(prix_str):
-    if not prix_str:
+def extraire_prix(s):
+    if not s:
         return None
-    prix_str = prix_str.replace(".", "").replace(" ", "").replace("\u202f", "").replace("\xa0", "")
-    chiffres = re.sub(r"[^\d]", "", prix_str)
+    s = s.replace(".","")\
+         .replace(" ","")\
+         .replace("\u202f","")\
+         .replace("\xa0","")
+    chiffres = re.sub(r"[^\d]","",s)
     try:
-        return float(chiffres)
+        v = float(chiffres)
+        return v if v > 100 else None
     except:
         return None
 
+def detecter_arrondissement_depuis_lien(lien):
+    if not lien:
+        return None
+    for code in ARRONDISSEMENTS:
+        if code in lien:
+            return code
+    return None
+
 def filtrer(annonce, zone):
     texte = (annonce.get("titre","") + " " + annonce.get("description","")).lower()
-    raisons = []
+    lien = annonce.get("lien","")
     prix = extraire_prix(annonce.get("prix",""))
-    if zone == "paris-surfaces-diverses":
+    raisons = []
+
+    if zone == "paris-surfaces":
         raisons.append("Surfaces diverses Paris")
-    elif zone in ARRONDISSEMENTS:
+        return True, raisons
+
+    if zone in ARRONDISSEMENTS:
+        arr_reel = detecter_arrondissement_depuis_lien(lien) or zone
+        if arr_reel != zone:
+            return False, []
         prix_min, prix_max = ARRONDISSEMENTS[zone]
         if prix is not None and prix_min <= prix <= prix_max:
-            raisons.append("Paris " + zone + " - prix " + str(int(prix)) + " EUR dans fourchette " + str(prix_min) + "-" + str(prix_max) + " EUR")
+            raisons.append("Paris " + zone + " - " + str(int(prix)) + " EUR (fourchette " + str(prix_min) + "-" + str(prix_max) + " EUR)")
         else:
-            return False, []
-    elif zone == "france":
+            for mot in REGLE_2_MOTS:
+                if mot in texte:
+                    raisons.append("mot cle: " + mot)
+                    break
+            return len(raisons) > 0, raisons
+
+    if zone == "france":
         if "box" in texte:
             if prix is None:
                 raisons.append("box present (prix non detecte)")
             elif prix < 15000:
-                raisons.append("box + prix " + str(int(prix)) + " EUR < 15000 EUR")
+                raisons.append("box + " + str(int(prix)) + " EUR < 15000 EUR")
+
     for mot in REGLE_2_MOTS:
         if mot in texte:
             raisons.append("mot cle: " + mot)
             break
+
     return len(raisons) > 0, raisons
 
 def scraper(url, zone):
@@ -69,7 +126,7 @@ def scraper(url, zone):
         r = requests.get(url, headers=HEADERS, timeout=20)
         r.raise_for_status()
     except Exception as e:
-        log.error("Erreur scraping " + zone + ": " + str(e))
+        log.error("Scraping " + zone + ": " + str(e))
         return []
     soup = BeautifulSoup(r.text, "html.parser")
     cartes = soup.select("a.search-list-item-link, div.search-list-item")
@@ -120,8 +177,8 @@ def sauvegarder(ids):
         json.dump({"ids":list(ids)}, f)
 
 def main():
-    log.info("Demarrage PAP Alertes Parking")
-    envoyer_telegram("PAP Alertes Parking demarre - surveillance Paris + France toutes les 5 minutes")
+    log.info("Demarrage")
+    envoyer_telegram("PAP Alertes Parking demarre - Paris + France toutes les 5 min")
     vues = charger()
     premiere = len(vues) == 0
     while True:
@@ -142,7 +199,12 @@ def main():
                 log.info("Premiere execution - " + str(len(vues)) + " annonces indexees")
                 premiere = False
             for a, raisons, zone in nouvelles:
-                msg = "NOUVELLE ANNONCE PAP\n" + a.get("titre","") + "\n" + a.get("lieu","") + "\n" + a.get("prix","") + "\n" + " | ".join(raisons) + "\n" + a.get("lien","")
+                msg = ("NOUVELLE ANNONCE PAP\n"
+                    + a.get("titre","") + "\n"
+                    + a.get("lieu","") + "\n"
+                    + a.get("prix","") + "\n"
+                    + " | ".join(raisons) + "\n"
+                    + a.get("lien",""))
                 envoyer_telegram(msg)
                 time.sleep(1)
             sauvegarder(vues)
