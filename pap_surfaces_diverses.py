@@ -89,7 +89,8 @@ def main():
     log.info("Demarrage Surfaces IDF")
     telegram("Surfaces IDF demarre - surveillance toutes les 5 min - max 60000 EUR")
     vues=charger()
-    premiere=False
+    premiere=len(vues)==0
+    
     while True:
         try:
             nouvelles=[]
