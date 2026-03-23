@@ -5,12 +5,12 @@ TOKEN="8619174227:AAGfg_JRsA6D9yvDT9On2lrapjrSiaLXmRU"
 CHAT="7685475700"
 INTERVAL=300
 SEEN="surfaces_vues.json"
-URL="https://www.pap.fr/annonce/vente-surface-a-amenager-ile-de-france-g471"
 PRIX_MAX=60000
+PAGES=3
 
 logging.basicConfig(level=logging.INFO,format="%(asctime)s %(message)s")
 log=logging.getLogger("surfaces")
-H={"User-Agent":"Mozilla/5.0 Chrome/124.0.0.0 Safari/537.36","Accept-Language":"fr-FR,fr;q=0.9"}
+H={"User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36","Accept-Language":"fr-FR,fr;q=0.9","Accept":"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"}
 
 def telegram(msg):
     try:
@@ -30,42 +30,52 @@ def prix_num(s):
         return None
 
 def scraper():
-    try:
-        r=requests.get(URL,headers=H,timeout=20)
-        r.raise_for_status()
-    except Exception as e:
-        log.error("Scraping: "+str(e))
-        return []
-    soup=BeautifulSoup(r.text,"html.parser")
-    cartes=soup.select("a.search-list-item-link,div.search-list-item") or soup.select("[class*='search-list-item']")
     res=[]
-    for c in cartes:
+    for page in range(1,PAGES+1):
+        url="https://www.pap.fr/annonce/vente-surface-a-amenager-ile-de-france-g471"
+        if page>1:
+            url+="?page="+str(page)
         try:
-            a={}
-            l=c if c.name=="a" else c.find("a")
-            if l and l.get("href"):
-                h=l["href"]
-                a["lien"]=h if h.startswith("http") else "https://www.pap.fr"+h
-            t=c.select_one("h2,h3,[class*='title'],[class*='titre']")
-            if t:
-                a["titre"]=t.get_text(strip=True)
-            p=c.select_one("[class*='price'],[class*='prix']")
-            if p:
-                a["prix"]=p.get_text(strip=True)
-            l2=c.select_one("[class*='location'],[class*='lieu'],[class*='city']")
-            if l2:
-                a["lieu"]=l2.get_text(strip=True)
-            d=c.select_one("[class*='desc'],p")
-            if d:
-                a["description"]=d.get_text(strip=True)
-            if a.get("lien") or a.get("titre"):
-                res.append(a)
-        except:
+            r=requests.get(url,headers=H,timeout=20)
+            r.raise_for_status()
+        except Exception as e:
+            log.error("Page "+str(page)+": "+str(e))
             continue
-    log.info(str(len(res))+" annonces trouvees")
+        soup=BeautifulSoup(r.text,"html.parser")
+        cartes=soup.select("a.search-list-item-link,div.search-list-item")
+        if not cartes:
+            cartes=soup.select("[class*='search-list-item']")
+        if not cartes:
+            cartes=soup.select("article")
+        log.info("Page "+str(page)+": "+str(len(cartes))+" cartes trouvees")
+        for c in cartes:
+            try:
+                a={}
+                l=c if c.name=="a" else c.find("a")
+                if l and l.get("href"):
+                    h=l["href"]
+                    a["lien"]=h if h.startswith("http") else "https://www.pap.fr"+h
+                t=c.select_one("h2,h3,[class*='title'],[class*='titre']")
+                if t:
+                    a["titre"]=t.get_text(strip=True)
+                p=c.select_one("[class*='price'],[class*='prix']")
+                if p:
+                    a["prix"]=p.get_text(strip=True)
+                l2=c.select_one("[class*='location'],[class*='lieu'],[class*='city']")
+                if l2:
+                    a["lieu"]=l2.get_text(strip=True)
+                d=c.select_one("[class*='desc'],p")
+                if d:
+                    a["description"]=d.get_text(strip=True)
+                if a.get("lien") or a.get("titre"):
+                    res.append(a)
+            except:
+                continue
+        time.sleep(2)
+    log.info("Total: "+str(len(res))+" annonces")
     return res
 
-    def gen_id(a):
+def gen_id(a):
     lien=a.get("lien","")
     m=re.search(r'r(\d+)$',lien)
     if m:
@@ -87,10 +97,9 @@ def sauver(ids):
 
 def main():
     log.info("Demarrage Surfaces IDF")
-    telegram("Surfaces IDF demarre - surveillance toutes les 5 min - max 60000 EUR")
+    telegram("Surfaces IDF demarre - 3 pages - max "+str(PRIX_MAX)+" EUR - toutes les 5 min")
     vues=charger()
     premiere=len(vues)==0
-    
     while True:
         try:
             nouvelles=[]
