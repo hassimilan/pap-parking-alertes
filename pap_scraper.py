@@ -33,8 +33,10 @@ def prix_num(s):
 def arr_depuis_lien(lien):
     if not lien:
         return None
-    for code in ARR:
-        if code in lien:
+    m=re.search(r'paris-\d+e[r]?-(\d{5})',lien)
+    if m:
+        code=m.group(1)
+        if code in ARR:
             return code
     return None
 
