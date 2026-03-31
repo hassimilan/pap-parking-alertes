@@ -128,7 +128,7 @@ def main():
     log.info("Demarrage PAP Parking")
     telegram("PAP Alertes Parking demarre - France entiere toutes les 5 min")
     vues=charger()
-    premiere=False
+    premiere=len(vues)==0
     while True:
         try:
             nouvelles=[]
