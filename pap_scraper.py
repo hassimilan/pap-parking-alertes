@@ -5,7 +5,7 @@ TOKEN="8619174227:AAGfg_JRsA6D9yvDT9On2lrapjrSiaLXmRU"
 CHAT="7685475700"
 INTERVAL=300
 SEEN="annonces_vues.json"
-URL="https://www.pap.fr/annonce/vente-parking-garage-box-france-g439"
+URLS_PAGES=["https://www.pap.fr/annonce/vente-parking-garage-box-france-g439","https://www.pap.fr/annonce/vente-parking-garage-box-france-g439?page=2","https://www.pap.fr/annonce/vente-parking-garage-box-france-g439?page=3"]
 MOTS=["boxable","boxables","autorisation","accord","possibilite","possibilité","lot","boxer","urgent","fermer"]
 ARR={"75001":(15000,30000),"75002":(15000,30000),"75003":(10000,30000),"75004":(15000,30000),"75005":(10000,25000),"75006":(15000,30000),"75007":(15000,30000),"75008":(15000,30000),"75009":(10000,20000),"75010":(4000,11000),"75011":(5000,13000),"75012":(4000,13000),"75013":(4000,8000),"75014":(4000,11000),"75015":(3000,12000),"75016":(5000,25000),"75017":(5000,25000),"75018":(2000,10000),"75019":(2000,10000),"75020":(0,10000)}
 
@@ -39,41 +39,43 @@ def arr_depuis_lien(lien):
     return None
 
 def scraper():
-    try:
-        r=requests.get(URL,headers=H,timeout=20)
-        r.raise_for_status()
-    except Exception as e:
-        log.error("Scraping: "+str(e))
-        return []
-    soup=BeautifulSoup(r.text,"html.parser")
-    cartes=soup.select("a.search-list-item-link,div.search-list-item") or soup.select("[class*='search-list-item']")
     res=[]
-    for c in cartes:
+    for url in URLS_PAGES:
         try:
-            a={}
-            l=c if c.name=="a" else c.find("a")
-            if l and l.get("href"):
-                h=l["href"]
-                a["lien"]=h if h.startswith("http") else "https://www.pap.fr"+h
-            t=c.select_one("h2,h3,[class*='title'],[class*='titre']")
-            if t:
-                a["titre"]=t.get_text(strip=True)
-            p=c.select_one("[class*='price'],[class*='prix']")
-            if p:
-                a["prix"]=p.get_text(strip=True)
-            l2=c.select_one("[class*='location'],[class*='lieu'],[class*='city']")
-            if l2:
-                a["lieu"]=l2.get_text(strip=True)
-            d=c.select_one("[class*='desc'],p")
-            if d:
-                a["description"]=d.get_text(strip=True)
-            if a.get("lien") or a.get("titre"):
-                res.append(a)
-        except:
+            r=requests.get(url,headers=H,timeout=20)
+            r.raise_for_status()
+        except Exception as e:
+            log.error("Scraping: "+str(e))
             continue
+        soup=BeautifulSoup(r.text,"html.parser")
+        cartes=soup.select("a.search-list-item-link,div.search-list-item") or soup.select("[class*='search-list-item']")
+        for c in cartes:
+            try:
+                a={}
+                l=c if c.name=="a" else c.find("a")
+                if l and l.get("href"):
+                    h=l["href"]
+                    a["lien"]=h if h.startswith("http") else "https://www.pap.fr"+h
+                t=c.select_one("h2,h3,[class*='title'],[class*='titre']")
+                if t:
+                    a["titre"]=t.get_text(strip=True)
+                p=c.select_one("[class*='price'],[class*='prix']")
+                if p:
+                    a["prix"]=p.get_text(strip=True)
+                l2=c.select_one("[class*='location'],[class*='lieu'],[class*='city']")
+                if l2:
+                    a["lieu"]=l2.get_text(strip=True)
+                d=c.select_one("[class*='desc'],p")
+                if d:
+                    a["description"]=d.get_text(strip=True)
+                if a.get("lien") or a.get("titre"):
+                    res.append(a)
+            except:
+                continue
+        time.sleep(2)
     log.info(str(len(res))+" annonces trouvees")
     return res
-
+    
 def gen_id(a):
     lien=a.get("lien","")
     m=re.search(r'r(\d+)$',lien)
