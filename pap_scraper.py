@@ -1,18 +1,25 @@
 import requests,json,time,hashlib,os,re,logging
-from bs4 import BeautifulSoup
-if os.path.exists("annonces_vues.json"): os.remove("annonces_vues.json")
 
 TOKEN="8619174227:AAGfg_JRsA6D9yvDT9On2lrapjrSiaLXmRU"
 CHAT="7685475700"
 INTERVAL=300
 SEEN="annonces_vues.json"
-URLS_PAGES=["https://www.pap.fr/annonce/vente-parking-garage-box-france-g439","https://www.pap.fr/annonce/vente-parking-garage-box-france-g439?page=2","https://www.pap.fr/annonce/vente-parking-garage-box-france-g439?page=3"]
 MOTS=["boxable","boxables","autorisation","accord","possibilite","possibilité","lot","boxer","urgent","fermer"]
 ARR={"75001":(15000,30000),"75002":(15000,30000),"75003":(10000,30000),"75004":(15000,30000),"75005":(10000,25000),"75006":(15000,30000),"75007":(15000,30000),"75008":(15000,30000),"75009":(10000,20000),"75010":(4000,11000),"75011":(5000,13000),"75012":(4000,13000),"75013":(4000,8000),"75014":(4000,11000),"75015":(3000,12000),"75016":(5000,25000),"75017":(5000,25000),"75018":(2000,10000),"75019":(2000,10000),"75020":(0,10000)}
 
 logging.basicConfig(level=logging.INFO,format="%(asctime)s %(message)s")
 log=logging.getLogger("pap")
-H={"User-Agent":"Mozilla/5.0 Chrome/124.0.0.0 Safari/537.36","Accept-Language":"fr-FR,fr;q=0.9"}
+
+H={
+    "User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/124.0.0.0 Safari/537.36",
+    "Accept":"application/json, text/plain, /",
+    "Accept-Language":"fr-FR,fr;q=0.9",
+    "Referer":"https://www.pap.fr/",
+    "Origin":"https://www.pap.fr"
+}
+
+API_URL="https://ws.pap.fr/immobilier/annonces?typeBien[]=parking-garage-box&typeTransaction=vente&geo[]=ile-de-france&nbResultats=100&tri=date-desc"
+API_FRANCE="https://ws.pap.fr/immobilier/annonces?typeBien[]=parking-garage-box&typeTransaction=vente&nbResultats=100&tri=date-desc"
 
 def telegram(msg):
     try:
@@ -23,7 +30,7 @@ def telegram(msg):
 def prix_num(s):
     if not s:
         return None
-    s=s.replace(".","").replace(" ","").replace("\u202f","").replace("\xa0","")
+    s=str(s).replace(".","").replace(" ","").replace("\u202f","").replace("\xa0","")
     c=re.sub(r"[^\d]","",s)
     try:
         v=float(c)
@@ -31,55 +38,46 @@ def prix_num(s):
     except:
         return None
 
-def arr_depuis_lien(lien):
-    if not lien:
-        return None
-    m=re.search(r'paris-\d+e[r]?-(\d{5})',lien)
-    if m:
-        code=m.group(1)
-        if code in ARR:
+def arr_depuis_texte(texte,lien):
+    if lien:
+        m=re.search(r'paris-\d+e[r]?-(750\d\d)',lien)
+        if m and m.group(1) in ARR:
+            return m.group(1)
+    for code in ARR:
+        if code in str(texte):
             return code
     return None
 
 def scraper():
     res=[]
-    for url in URLS_PAGES:
+    for url in [API_FRANCE]:
         try:
             r=requests.get(url,headers=H,timeout=20)
             r.raise_for_status()
+            data=r.json()
+            annonces=data.get("annonces",data.get("items",data.get("results",[])))
+            if isinstance(annonces,list):
+                for a in annonces:
+                    try:
+                        lien=a.get("urlAnnonce",a.get("url",""))
+                        if lien and not lien.startswith("http"):
+                            lien="https://www.pap.fr"+lien
+                        prix=a.get("prix",a.get("price",a.get("montant","")))
+                        titre=a.get("titre",a.get("title",a.get("libelle","")))
+                        lieu=a.get("ville",a.get("city",a.get("localisation","")))
+                        desc=a.get("description",a.get("texte",""))
+                        ref=str(a.get("id",a.get("reference","")))
+                        res.append({"lien":lien,"prix":str(prix),"titre":str(titre),"lieu":str(lieu),"description":str(desc),"ref":ref})
+                    except:
+                        continue
+            log.info("API: "+str(len(res))+" annonces")
         except Exception as e:
-            log.error("Scraping: "+str(e))
-            continue
-        soup=BeautifulSoup(r.text,"html.parser")
-        cartes=soup.select("a.search-list-item-link,div.search-list-item") or soup.select("[class*='search-list-item']")
-        for c in cartes:
-            try:
-                a={}
-                l=c if c.name=="a" else c.find("a")
-                if l and l.get("href"):
-                    h=l["href"]
-                    a["lien"]=h if h.startswith("http") else "https://www.pap.fr"+h
-                t=c.select_one("h2,h3,[class*='title'],[class*='titre']")
-                if t:
-                    a["titre"]=t.get_text(strip=True)
-                p=c.select_one("[class*='price'],[class*='prix']")
-                if p:
-                    a["prix"]=p.get_text(strip=True)
-                l2=c.select_one("[class*='location'],[class*='lieu'],[class*='city']")
-                if l2:
-                    a["lieu"]=l2.get_text(strip=True)
-                d=c.select_one("[class*='desc'],p")
-                if d:
-                    a["description"]=d.get_text(strip=True)
-                if a.get("lien") or a.get("titre"):
-                    res.append(a)
-            except:
-                continue
-        time.sleep(2)
-    log.info(str(len(res))+" annonces trouvees")
+            log.error("API error: "+str(e))
     return res
-    
+
 def gen_id(a):
+    if a.get("ref"):
+        return a["ref"]
     lien=a.get("lien","")
     m=re.search(r'r(\d+)$',lien)
     if m:
@@ -87,11 +85,11 @@ def gen_id(a):
     return hashlib.md5((lien or a.get("titre","")+a.get("prix","")).encode()).hexdigest()
 
 def filtrer(a):
-    texte=(a.get("titre","")+a.get("description","")).lower()
+    texte=(str(a.get("titre",""))+str(a.get("description",""))+str(a.get("lieu",""))).lower()
     lien=a.get("lien","")
     px=prix_num(a.get("prix",""))
     raisons=[]
-    arr=arr_depuis_lien(lien)
+    arr=arr_depuis_texte(texte+lien,lien)
     if arr:
         pmin,pmax=ARR[arr]
         if px is not None and pmin<=px<=pmax:
@@ -115,23 +113,19 @@ def filtrer(a):
     return len(raisons)>0,raisons
 
 def charger():
-    if not os.path.exists(SEEN):
-        return set()
-    try:
-        with open(SEEN,"r") as f:
-            return set(json.load(f).get("ids",[]))
-    except:
-        return set()
+    if os.path.exists("annonces_vues.json"):
+        os.remove("annonces_vues.json")
+    return set()
 
 def sauver(ids):
     with open(SEEN,"w") as f:
         json.dump({"ids":list(ids)},f)
 
 def main():
-    log.info("Demarrage PAP Parking")
-    telegram("PAP Alertes Parking demarre - France entiere toutes les 5 min")
+    log.info("Demarrage PAP Parking API")
+    telegram("PAP Alertes Parking demarre - API directe - toutes les 5 min")
     vues=charger()
-    premiere=False
+    premiere=len(vues)==0
     while True:
         try:
             nouvelles=[]
@@ -150,7 +144,7 @@ def main():
                 msg=("NOUVELLE ANNONCE PAP PARKING\n"
                     +a.get("titre","")+"\n"
                     +a.get("lieu","")+"\n"
-                    +a.get("prix","")+"\n"
+                    +a.get("prix","")+" EUR\n"
                     +" | ".join(raisons)+"\n"
                     +a.get("lien",""))
                 telegram(msg)
