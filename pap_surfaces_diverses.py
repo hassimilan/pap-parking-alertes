@@ -99,7 +99,7 @@ def main():
     log.info("Demarrage Surfaces IDF")
     telegram("Surfaces IDF demarre - 3 pages - max "+str(PRIX_MAX)+" EUR - toutes les 5 min")
     vues=charger()
-    premiere=False
+    premiere=len(vues)==0
     while True:
         try:
             nouvelles=[]
