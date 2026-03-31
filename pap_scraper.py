@@ -5,7 +5,7 @@ TOKEN="8619174227:AAGfg_JRsA6D9yvDT9On2lrapjrSiaLXmRU"
 CHAT="7685475700"
 INTERVAL=300
 SEEN="annonces_vues.json"
-MOTS=["boxable","boxables","autorisation","accord","possibilite","possibilité","lot","boxer","urgent","fermer","garage"]
+MOTS=["boxable","boxables","autorisation","accord","possibilite","construire","possibilité","lot","boxer","urgent","fermer","garage", "cloturer"]
 
 logging.basicConfig(level=logging.INFO,format="%(asctime)s %(message)s")
 log=logging.getLogger("pap")
