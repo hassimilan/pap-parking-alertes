@@ -1,5 +1,6 @@
 import requests,json,time,hashlib,os,re,logging
 from bs4 import BeautifulSoup
+if os.path.exists("annonces_vues.json"): os.remove("annonces_vues.json")
 
 TOKEN="8619174227:AAGfg_JRsA6D9yvDT9On2lrapjrSiaLXmRU"
 CHAT="7685475700"
