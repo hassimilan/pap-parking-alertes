@@ -1,1 +1,2 @@
-worker: python pap_scraper.py & python seloger_scraper.py
+worker: python pap_scraper.py
+web: python seloger_scraper.py
