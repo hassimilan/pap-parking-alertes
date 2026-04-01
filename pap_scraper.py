@@ -3,14 +3,18 @@ from bs4 import BeautifulSoup
 
 TOKEN="8619174227:AAGfg_JRsA6D9yvDT9On2lrapjrSiaLXmRU"
 CHAT="7685475700"
-INTERVAL=300
+INTERVAL=900
 SEEN="annonces_vues.json"
 
-MOTS=["boxable","boxables","autorisation","accord","boxer","urgent","fermer","renover","rénover","construire","cloturer","clôturer","ag copro","assemblée"]
+MOTS=["boxable","boxables","autorisation","accord","boxer","urgent","fermer","renover","rénover","construire","cloturer","clôturer","ag","assemblée"]
 
 PAGES=[
     "https://www.pap.fr/annonce/garage-a-vendre-ile-de-france-g471g53191",
-    "https://www.pap.fr/annonce/garage-a-vendre-hauts-de-france-g471g54195",
+    "https://www.pap.fr/annonce/garage-a-vendre-ile-de-france-g471g53191?page=2",
+    "https://www.pap.fr/annonce/garage-a-vendre-ile-de-france-g471g53191?page=3",
+    "https://www.pap.fr/annonce/garage-a-vendre-ile-de-france-g471g53191?page=4",
+    "https://www.pap.fr/annonce/garage-a-vendre-ile-de-france-g471g53191?page=5",
+    "https://www.pap.fr/annonce/garage-a-vendre-ile-de-france-g471g53191?page=6",
 ]
 
 logging.basicConfig(level=logging.INFO,format="%(asctime)s %(message)s")
