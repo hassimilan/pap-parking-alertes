@@ -5,17 +5,17 @@ TOKEN="8619174227:AAGfg_JRsA6D9yvDT9On2lrapjrSiaLXmRU"
 CHAT="7685475700"
 INTERVAL=300
 SEEN="annonces_vues.json"
-MOTS=["boxable","boxables","autorisation","accord","possibilite","construire","possibilité","lot","boxer","urgent","fermer","garage", "cloturer"]
+MOTS=["boxable","boxables","autorisation","accord","possibilite","construire","possibilité","boxer","urgent","fermer","garage", "cloturer"]
 
 logging.basicConfig(level=logging.INFO,format="%(asctime)s %(message)s")
 log=logging.getLogger("pap")
 
 PAGES=[
-    "https://www.pap.fr/annonce/vente-parking-garage-box-ile-de-france-g439g475",
-    "https://www.pap.fr/annonce/vente-parking-garage-box-ile-de-france-g439g475?page=2",
-    "https://www.pap.fr/annonce/vente-parking-garage-box-ile-de-france-g439g475?page=3",
-    "https://www.pap.fr/annonce/vente-parking-garage-box-ile-de-france-g439g475?page=4",
-    "https://www.pap.fr/annonce/vente-parking-garage-box-ile-de-france-g439g475?page=5",
+    "https://www.pap.fr/annonce/garage-a-vendre-ile-de-france-g471",
+    "https://www.pap.fr/annonce/garage-a-vendre-ile-de-france-g471?page=2",
+    "https://www.pap.fr/annonce/garage-a-vendre-ile-de-france-g471?page=3",
+    "https://www.pap.fr/annonce/garage-a-vendre-ile-de-france-g471?page=4",
+    "https://www.pap.fr/annonce/garage-a-vendre-ile-de-france-g471?page=5",
 ]
 
 H={"User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/124.0.0.0 Safari/537.36","Accept-Language":"fr-FR,fr;q=0.9"}
