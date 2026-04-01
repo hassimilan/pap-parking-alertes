@@ -133,7 +133,7 @@ def run_scraper(pages,headers,nom,seen_file):
             log.error(nom+" erreur: "+str(e))
         time.sleep(INTERVAL)
 
-if _name__=="__main_":
+if __name__=="__main__":
     t1=threading.Thread(target=run_scraper,args=(PAP_PAGES,PAP_H,"PAP","pap_vues.json"),daemon=True)
     t2=threading.Thread(target=run_scraper,args=(SELOGER_PAGES,SL_H,"SeLoger","seloger_vues.json"),daemon=True)
     t1.start()
