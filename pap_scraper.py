@@ -6,7 +6,7 @@ CHAT="7685475700"
 INTERVAL=900
 SEEN="annonces_vues.json"
 
-MOTS=["boxable","boxables","autorisation","accord","boxer","urgent","fermer","renover","rénover","construire","cloturer","clôturer","ag","assemblée"]
+MOTS=["boxable","boxables","autorisation","accord","boxer","urgent","fermer","renover","rénover","construire","cloturer","clôturer","assemblée"]
 
 PAGES=[
     "https://www.pap.fr/annonce/garage-a-vendre-ile-de-france-g471g53191",
